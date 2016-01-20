@@ -1,4 +1,4 @@
-\documentclass[12pt,twoside]{jbook}
+\documentclass[12pt,twoside]{jreport}
 \usepackage{csg-thesis}
 
 \usepackage{bm}
@@ -19,8 +19,7 @@
 
 
 \title{
-バースマーク手法を利用した\\
-難読化手法の解析
+バースマーク手法の応用を用いた難読化手法の解析
 }
 
 \degree{卒業}
@@ -478,28 +477,75 @@ sandmarkの機能からDuplication registers, Merge local integers, Irreducibili
 
 \begin{table*}[t]
   \centering
+   \caption{Scalaの難読化前後のオペコードの5-gram（上位5位）}\label{table:5gram}
+   {\footnotesize
+   \begin{tabular}{lc|l|rrrr|r}
+     & 順位 & 5-gram & オリジナル & Allatori & ProGuard & yGuard & パープレキシティ \\ \hline
+ \multirow{5}{*}{\rotatebox{90}{オリジナル}}
+ & 1 & \verb!aload aload aload invokestatic areturn            ! & 2,293 & 2,293 &   995 & 2,293 & 6.3 \\
+ & 2 & \verb!aload instanceofInsn ifeq aload checkcast         ! & 1,342 &   257 & 1,097 & 1,342 & 1664.7 \\
+ & 3 & \verb!aload invokestatic aload invokestatic aload       ! & 1,276 &     6 &    53 & 1,276 & 6.6\\
+ & 4 & \verb!aload aload putfield aload invokespecial          ! & 1,215 &       &   771 & 1,215 & 4538.7\\
+ & 5 & \verb!invokestatic aload invokestatic aload invokestatic! & 1,146 &     6 &     6 & 1,146 & 499.5 \\ \hline
+ \multirow{5}{*}{\rotatebox{90}{Allatori}}
+ & 1 & \verb!aload aload aload invokestatic areturn  ! & 2,293 & 2,293 &   995 & 2,293 & 6.3 \\
+ & 2 & \verb!instanceofInsn aload swap ifeq checkcast! &       &   965 &       &       & $4.7 \times 10^6$\\
+ & 3 & \verb!aload aload aload aload aload           ! &   869 &   847 &   244 &   869 & 4.7 \\
+ & 4 & \verb!aload swap ifeq checkcast aload         ! &       &   815 &       &       & 147,517 \\
+ & 5 & \verb!swap ifeq checkcast aload invokestatic  ! &       &   810 &       &       & 149,657 \\ \hline
+ \multirow{5}{*}{\rotatebox{90}{ProGuard}}
+ & 1 & \verb!aload instanceofInsn ifeq aload checkcast! & 1,342 &   257 & 1,097 & 1,342 & 1664.7\\
+ & 2 & \verb!aload dup astore getfield aload          ! &       &       & 1,049 &       & 36.6  \\
+ & 3 & \verb!aload aload aload invokestatic areturn   ! & 2,293 & 2,293 &   995 & 2,293 & 6.3   \\
+ & 4 & \verb!gotoInsn aload instanceofInsn ifeq aload ! & 1,063 &    36 &   945 & 1,063 & 3.1   \\
+ & 5 & \verb!instanceofInsn ifeq aload checkcast aload! &   814 &    13 &   794 &   814 & 2.3
+   \end{tabular}}
   \caption{Scalaの難読化前後のオペコードの5-gram（上位5位）}\label{table:5gram}
   {\footnotesize
-  \begin{tabular}{lc|l|rrrr|r}
-    & 順位 & 5-gram & オリジナル & Allatori & ProGuard & yGuard & パープレキシティ \\ \hline
+  \begin{tabular}{lc|l}
+    & 順位 & 5-gram \\ \hline
 \multirow{5}{*}{\rotatebox{90}{オリジナル}}
-& 1 & \verb!aload aload aload invokestatic areturn            ! & 2,293 & 2,293 &   995 & 2,293 & 6.3 \\
-& 2 & \verb!aload instanceofInsn ifeq aload checkcast         ! & 1,342 &   257 & 1,097 & 1,342 & 1664.7 \\
-& 3 & \verb!aload invokestatic aload invokestatic aload       ! & 1,276 &     6 &    53 & 1,276 & 6.6\\
-& 4 & \verb!aload aload putfield aload invokespecial          ! & 1,215 &       &   771 & 1,215 & 4538.7\\
-& 5 & \verb!invokestatic aload invokestatic aload invokestatic! & 1,146 &     6 &     6 & 1,146 & 499.5 \\ \hline
+& 1 & \verb!aload aload aload invokestatic areturn            ! \\
+& 2 & \verb!aload instanceofInsn ifeq aload checkcast         ! \\
+& 3 & \verb!aload invokestatic aload invokestatic aload       ! \\
+& 4 & \verb!aload aload putfield aload invokespecial          ! \\
+& 5 & \verb!invokestatic aload invokestatic aload invokestatic! \\ \hline
 \multirow{5}{*}{\rotatebox{90}{Allatori}}
-& 1 & \verb!aload aload aload invokestatic areturn  ! & 2,293 & 2,293 &   995 & 2,293 & 6.3 \\
-& 2 & \verb!instanceofInsn aload swap ifeq checkcast! &       &   965 &       &       & $4.7 \times 10^6$\\
-& 3 & \verb!aload aload aload aload aload           ! &   869 &   847 &   244 &   869 & 4.7 \\
-& 4 & \verb!aload swap ifeq checkcast aload         ! &       &   815 &       &       & 147,517 \\
-& 5 & \verb!swap ifeq checkcast aload invokestatic  ! &       &   810 &       &       & 149,657 \\ \hline
+& 1 & \verb!aload aload aload invokestatic areturn  ! \\
+& 2 & \verb!instanceofInsn aload swap ifeq checkcast! \\
+& 3 & \verb!aload aload aload aload aload           ! \\
+& 4 & \verb!aload swap ifeq checkcast aload         ! \\
+& 5 & \verb!swap ifeq checkcast aload invokestatic  ! \\ \hline
 \multirow{5}{*}{\rotatebox{90}{ProGuard}}
-& 1 & \verb!aload instanceofInsn ifeq aload checkcast! & 1,342 &   257 & 1,097 & 1,342 & 1664.7\\
-& 2 & \verb!aload dup astore getfield aload          ! &       &       & 1,049 &       & 36.6  \\
-& 3 & \verb!aload aload aload invokestatic areturn   ! & 2,293 & 2,293 &   995 & 2,293 & 6.3   \\
-& 4 & \verb!gotoInsn aload instanceofInsn ifeq aload ! & 1,063 &    36 &   945 & 1,063 & 3.1   \\
-& 5 & \verb!instanceofInsn ifeq aload checkcast aload! &   814 &    13 &   794 &   814 & 2.3
+& 1 & \verb!aload instanceofInsn ifeq aload checkcast! \\
+& 2 & \verb!aload dup astore getfield aload          ! \\
+& 3 & \verb!aload aload aload invokestatic areturn   ! \\
+& 4 & \verb!gotoInsn aload instanceofInsn ifeq aload ! \\
+& 5 & \verb!instanceofInsn ifeq aload checkcast aload!
+  \end{tabular}}
+  \vfill
+  \caption{Scalaの難読化前後のオペコードの5-gramの頻度（上位5位）}\label{table:5gram}
+  {\footnotesize
+  \begin{tabular}{lc|rrrr|r}
+    & 順位 & オリジナル & Allatori & ProGuard & yGuard & PPL \\ \hline
+    \multirow{5}{*}{\rotatebox{90}{オリジナル}}
+& 1 & 2,293 & 2,293 &   995 & 2,293 &    6.3 \\
+& 2 & 1,342 &   257 & 1,097 & 1,342 & 1664.7 \\
+& 3 & 1,276 &     6 &    53 & 1,276 &    6.6 \\
+& 4 & 1,215 &       &   771 & 1,215 & 4538.7 \\
+& 5 & 1,146 &     6 &     6 & 1,146 &  499.5 \\ \hline
+\multirow{5}{*}{\rotatebox{90}{Allatori}}
+& 1 & 2,293 & 2,293 &   995 & 2,293 &         6.3 \\
+& 2 &       &   965 &       &       & 4,700,000\\
+& 3 &   869 &   847 &   244 &   869 &         4.7 \\
+& 4 &       &   815 &       &       &   147,517 \\
+& 5 &       &   810 &       &       &   149,657 \\ \hline
+\multirow{5}{*}{\rotatebox{90}{ProGuard}}
+& 1 & 1,342 &   257 & 1,097 & 1,342 & 1664.7 \\
+& 2 &       &       & 1,049 &       &   36.6 \\
+& 3 & 2,293 & 2,293 &   995 & 2,293 &    6.3 \\
+& 4 & 1,063 &    36 &   945 & 1,063 &    3.1 \\
+& 5 &   814 &    13 &   794 &   814 &    2.3
   \end{tabular}}
 \end{table*}
 
@@ -746,8 +792,8 @@ $n$-gramを調査した。その結果のうち、高頻度の$n$-gramを5つ、
 特徴を増やすことで未知の難読化手法に対応できる。
 
 
-\bibliographystyle{sieicej}
-\bibliography{sagisaka}
+ \bibliographystyle{csg-thesis}
+ \bibliography{sagisaka}
 
 \appendix
 \chapter{5-gramの命令列}
