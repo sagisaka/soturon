@@ -105,10 +105,11 @@
 しかし現在のところ、逆難読化についての研究はほとんどされていない。
 逆難読化を行うには、様々な難読化からどの難読化が使用されているかの特定を行い、どのように解析されているのかを見極める必要がある。
 
+%%%
 そこで本稿では難読化されたプログラムを解析し、難読化手法の特徴を探る。
-具体的には、難読化手法を適用したソフトウェア(jarファイル)の命令を解析し、オペコードのn-gramごとの生成確立を得る。それらの結果を比較し、特徴の抽出を行う。
+具体的には、予備実験として難読化手法を適用したソフトウェア(jarファイル)の命令を解析し、オペコードのn-gramごとの生成確立を得る。それらの結果を比較し、特徴を抽出する。
+その後、評価実験として抽出した特徴から未知のプロダクトや未知の難読化手法に対して有効かを検証する。
 
-また、抽出した特徴が未知のプロダクトや未知の難読化手法に対して有効かを検証する。
 
 \chapter{関連研究}\label{sect:related}
 %%そのまま
@@ -689,8 +690,8 @@ $n$-gramを基本とし、そのパープレキシティと頻度を用いて比
 \section{$n$-gramの分析}
 
 ここでは、それぞれの難読化手法を頻度とパープレキシティを参考に$n$-gramの命令列を解析した。
-それぞれの頻度順でソートしたASMを表\ref{table:asm}に、
-オリジナル順にソートしたグラフ\ref{fig:graph}を付録に記す。
+%それぞれの頻度順でソートしたASMをの表\ref{table:asm}に、
+%オリジナル順にソートしたグラフ\ref{fig:graph}を付録に記す。
 
 解析した結果、難読化手法の保護前後で違った命令列がみられた。
 また、追加された命令列はパープレキシティの値が高く、珍しい命令列であることがわかった。
@@ -794,108 +795,6 @@ $n$-gramを調査した。その結果のうち、高頻度の$n$-gramを5つ、
  \bibliography{sagisaka}
 
 \appendix
-
-%%
-
-\begin{table*}[t]
-  \centering
-  \caption{ASMの難読化前後のオペコードの5-gram（上位5位）}\label{table:asm}
-  {\footnotesize
-  \begin{tabular}{lc|l}
-    & 順位 & 5-gram \\ \hline
-\multirow{5}{*}{\rotatebox{90}{オリジナル}}
-& 1 & \verb!<code> <code> <code> <code> aload      ! \\
-& 2 & \verb!<code> <code> <code> aload getfield    ! \\
-& 3 & \verb!<code> <code> <code> aload dup         ! \\
-& 4 & \verb!aload dup getfield swap getfield       ! \\
-& 5 & \verb!aload getfield ldc invokestatic invokevirtual! \\ \hline
-\multirow{5}{*}{\rotatebox{90}{ALL}}
-& 1 & \verb!dup2X2 lxor lconst1 lneg bipush  ! \\
-& 2 & \verb!lload dup2X2 lxor lconst1 lneg   ! \\
-& 3 & \verb!aload lload bipush lshr l2i           ! \\
-& 4 & \verb!<code> <code> <code> <code> aload        ! \\
-& 5 & \verb!bipush lushr land lxor lstore  ! \\ \hline
-\multirow{5}{*}{\rotatebox{90}{DR}}
-& 1 & \verb!<code> <code> <code> <code> aload  ! \\
-& 2 & \verb!<code> <code> <code> aload getfield! \\
-& 3 & \verb!iconst1 isub istore iload iload         ! \\
-& 4 & \verb!istore iload aload arraylength ifcmpge        ! \\
-& 5 & \verb!iconst0 dup istore istore iload  ! \\ \hline
-\multirow{5}{*}{\rotatebox{90}{IRR}}
-& 1 & \verb!aload aload aload invokestatic areturn  ! \\
-& 2 & \verb!instanceofInsn aload swap ifeq checkcast! \\
-& 3 & \verb!aload aload aload aload aload           ! \\
-& 4 & \verb!iload iconst1 isub istore iload        ! \\
-& 5 & \verb!i2l iconst0 i2l lcmp iconst1 ! \\ \hline
-\multirow{5}{*}{\rotatebox{90}{MLI}}
-& 1 & \verb!dup2X2 lxor lconst1 lneg bipush  ! \\
-& 2 & \verb!lload dup2X2 lxor lconst1 lneg! \\
-& 3 & \verb!aload lload bipush lshr l2i         ! \\
-& 4 & \verb!<code> <code> <code> <code> aload        ! \\
-& 5 & \verb!bipush lushr land lxor lstore  ! \\ \hline
-\multirow{5}{*}{\rotatebox{90}{PG}}
-& 1 & \verb!aload instanceofInsn ifeq aload checkcast! \\
-& 2 & \verb!aload dup astore getfield aload          ! \\
-& 3 & \verb!aload aload aload invokestatic areturn   ! \\
-& 4 & \verb!gotoInsn aload instanceofInsn ifeq aload ! \\
-& 5 & \verb!instanceofInsn ifeq aload checkcast aload!
-  \end{tabular}}
-  \vfill
-  \caption{ASMの難読化前後のオペコードの5-gramの頻度（上位5位）}\label{table:asm}
-  {\footnotesize
-  \begin{tabular}{lc|rrrrrr|r}
-  %  & 順位 & オリジナル & ALL & DR & IRR & MLI & PG & PPL \\ \hline
-                                  &
-    \multicolumn{1}{p{1cm}}{順位} & 
-    \multicolumn{1}{p{1cm}}{ORI}  & 
-    \multicolumn{1}{p{1cm}}{ALL}  & 
-    \multicolumn{1}{p{1cm}}{DR}   & 
-    \multicolumn{1}{p{1cm}}{IRR}  & 
-    \multicolumn{1}{p{1cm}}{MLI}  & 
-    \multicolumn{1}{p{1cm}}{PG}   & 
-    \multicolumn{1}{p{1cm}}{PPL} \\ \hline
-\multirow{5}{*}{\rotatebox{90}{オリジナル}}
-& 1 & 219 & 206 & 219 & 219 & 193 & 219 & 61.19 \\
-& 2 & 122 &  93 & 122 & 122 & 108 & 122 & 659.44 \\
-& 3 & 37  &  22 &  37 &  36 &  37 &  37 & 2478.75 \\
-& 4 & 32  &   1 &  32 &  31 &  19 &  32 & 2305.93 \\
-& 5 & 30  &     &  30 &  30 &  30 &  30 & 7249.22 \\ \hline
-\multirow{5}{*}{\rotatebox{90}{ALL}}
-& 1 & 219 & 206 & 219 & 219 & 193 & 219 & 61.19 \\
-& 2 & 122 &  93 & 122 & 122 & 108 & 122 & 659.44 \\
-& 3 & 7   &  52 &   7 &     &     &     & 45551.95 \\
-& 4 &     &  39 &     &     &     &     & 319006.00 \\
-& 5 &     &  32 &     &     &     &     & 5954.31 \\ \hline
-\multirow{5}{*}{\rotatebox{90}{DR}}
-& 1 & 219 & 206 & 219 & 219 & 193 & 219 & 61.19 \\
-& 2 & 122 &  93 & 122 & 122 & 108 & 122 & 659.44 \\
-& 3 & 37  &  22 &  37 &  36 &  37 &  37 & 2478.75 \\
-& 4 & 32  &   1 &  32 &  31 &  19 &  32 & 2305.93 \\
-& 5 &     &     &  30 &     &     &     & 10835.90\\ \hline
-\multirow{5}{*}{\rotatebox{90}{IRR}}
-& 1 & 219 & 206 & 219 & 219 & 193 & 219 & 61.19 \\
-& 2 & 122 &  93 & 122 & 122 & 108 & 122 & 659.44 \\
-& 3 &   1 &     &   1 &  72 &   1 &   1 & 40200.30 \\
-& 4 &   1 &     &   1 &  72 &   1 &   1 & 7095.46 \\
-& 5 &     &     &  30 &  71 &     &     & 2552.52 \\ \hline
-
-\multirow{5}{*}{\rotatebox{90}{MLI}}
-& 1 &     &     &     &     & 291 &     & 1.13E+06 \\
-& 2 &     &     &     &     & 291 &     & 536547.00 \\
-& 3 &     &     &     &     & 253 &     & 5141.94 \\
-& 4 & 219 & 206 & 219 & 219 & 193 & 219 & 61.19 \\
-& 5 &     &     &     &     & 187 &     & 52136.30 \\
-\multirow{5}{*}{\rotatebox{90}{PG}}
-& 1 & 219 & 206 & 219 & 219 & 193 & 219 & 61.19 \\
-& 2 & 122 &  93 & 122 & 122 & 108 & 122 & 659.44 \\
-& 3 & 37  &  22 &  37 &  36 &  37 &  37 & 2478.75 \\
-& 4 & 32  &   1 &  32 &  31 &  19 &  32 & 2305.93 \\
-& 5 & 30  &     &  30 &  30 &  30 &  30 & 7249.22 
-  \end{tabular}}
-\end{table*}
-
-%%
-
 \chapter{5-gramの命令列}
 
 \begin{table*}[t]
